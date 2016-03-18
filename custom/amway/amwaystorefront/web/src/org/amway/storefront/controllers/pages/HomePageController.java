@@ -1,0 +1,100 @@
+/*
+ * [y] hybris Platform
+ *
+ * Copyright (c) 2000-2015 hybris AG
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of hybris
+ * ("Confidential Information"). You shall not disclose such Confidential
+ * Information and shall use it only in accordance with the terms of the
+ * license agreement you entered into with hybris.
+ *
+ *
+ */
+package org.amway.storefront.controllers.pages;
+
+import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
+import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+/**
+ * Controller for home page
+ */
+@Controller
+@Scope("tenant")
+@RequestMapping("/")
+public class HomePageController extends AbstractPageController
+{
+	@RequestMapping(method = RequestMethod.GET)
+	public String home(@RequestParam(value = "logout", defaultValue = "false") final boolean logout, final Model model,
+			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException
+	{
+		if (logout)
+		{
+			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.INFO_MESSAGES_HOLDER, "account.confirmation.signout.title");
+			return REDIRECT_PREFIX + ROOT;
+		}
+
+		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
+		updatePageTitle(model, getContentPageForLabelOrId(null));
+
+		return getViewForPage(model);
+	}
+
+	//	@Inject
+	//	@Named("notificationService")
+	//	private NotificationService notificationService;
+	//
+	//
+	//	@Inject
+	//	@Named("snsMobilePush")
+	//	private SNSMobilePush snsMobilePush;
+	//
+	//
+	//
+	//	@RequestMapping(value = "/addNotification", method = RequestMethod.GET)
+	//	public String addPushNotification()
+	//	{
+	//		return REDIRECT_PREFIX + "/pushNotification";
+	//	}
+	//
+	//
+	//	@RequestMapping(value = "/pushNotification", method = RequestMethod.POST)
+	//	@ResponseStatus(value = HttpStatus.ACCEPTED)
+	//	public void pushNotification(@RequestParam(value = "id", required = true) final String userId,
+	//			@RequestParam(value = "message", required = true) final String message,
+	//			@RequestParam(value = "type", required = true) final String type,
+	//			@RequestParam(value = "url", required = false) final String url)
+	//	{
+	//		final List<CustomerDeviceDto> userDetailsDtos = notificationService.getUserDetails(userId);
+	//		try
+	//		{
+	//			snsMobilePush.pushMessages(userDetailsDtos, message, type, url);
+	//		}
+	//		catch (final IOException e)
+	//		{
+	//			e.printStackTrace();
+	//			return;
+	//		}
+	//		return;
+	//	}
+
+
+	protected void updatePageTitle(final Model model, final AbstractPageModel cmsPage)
+	{
+		storeContentPageTitleInModel(model, getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle()));
+	}
+}

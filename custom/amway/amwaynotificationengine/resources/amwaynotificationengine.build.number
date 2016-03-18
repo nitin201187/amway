@@ -1,0 +1,11 @@
+#Ant properties
+#Wed Aug 26 14:34:36 CEST 2015
+builddate=20150826 1434
+description=amwaynotificationengine
+group.id=de.hybris.platform
+module.name=platform-module
+name=amwaynotificationengine
+releasedate=20150818 0913
+vendor=hybris
+version=5.7.0.0-SNAPSHOT
+version.api=5.7.0
